@@ -1,0 +1,22 @@
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+  traefik:
+    address: ":8000"
+
+providers:
+  swarm:
+    endpoint: "tcp://tasks.socket-proxy:2375"
+    network: "traefik"
+    watch: true
+    exposedByDefault: false
+
+api:
+  dashboard: true
+  insecure: false   # ⚠️ toujours false en prod
+
+
+log:
+  level: DEBUG
