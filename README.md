@@ -105,5 +105,4 @@ The Traefik overlay network is ready for routing containers and services.
 You can now proceed to deploy Traefik v3, HAProxy, and Keepalived for high availability and SSL termination.
 
 
-💡 Le réseau traefik sera utilisé par Traefik et les services web pour communiquer à travers le cluster.
 
