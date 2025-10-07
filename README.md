@@ -15,7 +15,7 @@ L’infrastructure repose sur :
 
 - 🐳 **3 nœuds Docker Swarm en mode manager** : garantissent le quorum Raft et la haute disponibilité du cluster.
 - 🧠 **2 nœuds HAProxy avec Keepalived** : fournissent une IP virtuelle flottante (VIP) pour l’accès externe.
-- 🔒 **Terminaison SSL sur HAProxy** : certificats Let’s Encrypt, puis transmission du trafic en TCP vers les nœuds Traefik.
+- 🔒 **Terminaison SSL sur HAProxy** : certificats Let’s Encrypt, puis transmission du trafic en TCP vers les nœuds Traefik. Ou certificat auto signé.
 - 🌐 **Traefik v3** : déployé en mode global sur les managers pour le routage HTTP/S dynamique.
 - 🧰 **GitLab** : gestion de la configuration (copie de travail RW, CI/CD possible pour automatiser les mises à jour).
 - ⚙️ **Nœuds workers (lot 2)** : prévus pour héberger les services applicatifs (Nginx, Apache, etc.).
