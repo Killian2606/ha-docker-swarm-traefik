@@ -40,7 +40,7 @@ services:
 
   # Traefik en mode actif-actif sur tous les managers
   traefik:
-    image: traefik:v3.5
+    image: traefik:latest
     networks: [traefik]
     ports:
       - target: 80
@@ -64,3 +64,4 @@ services:
       placement:
         constraints:
           - node.role == manager
+
