@@ -1,7 +1,7 @@
 
 
 
-![Capture d’écran de l’application](Architecture_Swarm.png)
+![Capture d’écran de l’application](Schéma_Architecture.png)
 
 # ⚙️ Architecture du Cluster Docker Swarm
 
