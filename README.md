@@ -1,3 +1,8 @@
+
+
+
+![Capture d’écran de l’application](Architecture_Swarm.png)
+
 # ⚙️ Architecture du Cluster Docker Swarm
 
 Ce projet met en place une **infrastructure haute disponibilité** reposant sur une architecture modulaire et sécurisée, intégrant **HAProxy**, **Keepalived**, **Traefik v3**, et **Docker Swarm**.
