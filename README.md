@@ -19,7 +19,7 @@ L’infrastructure repose sur :
 
 - 🐳 **3 nœuds Docker Swarm en mode manager** : garantissent le quorum Raft et la haute disponibilité du cluster.
 - 🧠 **2 nœuds HAProxy avec Keepalived** : fournissent une IP virtuelle flottante (VIP) pour l’accès externe.
-- 🔒 **Terminaison SSL sur HAProxy** : certificats Let’s Encrypt, puis transmission du trafic en TCP vers les nœuds Traefik. Ou certificat auto signé.
+- 🔒 **Terminaison SSL sur HAProxy** : certificats puis transmission du trafic en TCP vers les nœuds Traefik. 
 - 🌐 **Traefik v3** : déployé en mode global sur les managers pour le routage HTTP/S dynamique.
 - 🧰 **GitLab** : gestion de la configuration (copie de travail RW, CI/CD possible pour automatiser les mises à jour).
 - ⚙️ **Nœuds workers (lot 2)** : prévus pour héberger les services applicatifs (Nginx, Apache, etc.).
@@ -36,48 +36,72 @@ L’infrastructure repose sur :
 
 ---
 
-## 🚢 Nœuds Managers – Traefik v3 + Socket Proxy
+# 🚢 Managers – Traefik v3 + Socket Proxy
 
-- **Traefik v3** est déployé en mode *global* sur tous les managers.
-- Chaque instance communique avec un **socket Docker protégé** via un conteneur `socket-proxy`.
-- Le `socket-proxy` limite l’accès à l’API Docker en lecture seule (services, tasks, networks, swarm).
-- URL d’accès :
+This section explains how the manager nodes operate within the Docker Swarm cluster and how to initialize the environment.
 
-💡 Voici comment faire concrètement :
+---
 
- # Étapes — Initialisation du cluster Docker Swarm /  Initialisation du cluster Docker Swarm
+## ⚙️ Overview
+
+- **Traefik v3** is deployed in *global* mode across all manager nodes.  
+- Each instance communicates with a **secured Docker socket** through a `socket-proxy` container.  
+- The `socket-proxy` restricts Docker API access to **read-only** (services, tasks, networks, swarm).  
+- Access URL:  
+tcp://tasks.socket-proxy:2375
+
+yaml
 
 
-Sur le **manager principal** :
+💡 This setup ensures a **centralized and secure view** of the Swarm cluster without exposing the Docker daemon directly.
+
+---
+
+# 🧩 Steps — Docker Swarm Cluster Initialization
+
+Follow the steps below to set up and connect all nodes in your Docker Swarm environment.
+
+---
+
+## 🐳 Step 1 — Initialize the Docker Swarm Cluster
+
+On the **main manager node**, run:
 
 ```bash
 docker swarm init --advertise-addr 10.10.0.11
+Copy the join token displayed at the end of the command:
 
-
-Copiez le token d’adhésion affiché à la fin :
 
 docker swarm join --token SWMTKN-1-xxxxxxxx 10.10.0.11:2377
+On the other manager nodes and the worker, execute the following command to join the cluster:
 
-
-Sur les autres managers et le worker, exécutez :
 
 docker swarm join --token SWMTKN-1-xxxxxxxx 10.10.0.11:2377
+To verify that all nodes have successfully joined the cluster:
 
-
-Vérifiez que le cluster est bien formé :
 
 docker node ls
+✅ You should now see all managers and workers listed in the cluster overview.
 
+🌐 Step 2 — Create the Traefik Overlay Network
+On any manager node, create the overlay network for Traefik and web services:
 
-
-Sur un manager :
 
 docker network create --driver=overlay --attachable traefik
+Check that the network has been successfully created:
 
-
-Vérifiez que le réseau a bien été créé :
 
 docker network ls
+💡 The traefik overlay network will be used by Traefik and web services to communicate securely across the cluster.
+
+✅ Summary
+At this stage:
+
+Your Docker Swarm cluster is initialized and all nodes are connected.
+
+The Traefik overlay network is ready for routing containers and services.
+
+You can now proceed to deploy Traefik v3, HAProxy, and Keepalived for high availability and SSL termination.
 
 
 💡 Le réseau traefik sera utilisé par Traefik et les services web pour communiquer à travers le cluster.
