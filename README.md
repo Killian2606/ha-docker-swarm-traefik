@@ -3,6 +3,10 @@
 
 ![Capture d’écran de l’application](Schéma_Architecture.png)
 
+
+
+
+
 # ⚙️ Architecture du Cluster Docker Swarm
 
 Ce projet met en place une **infrastructure haute disponibilité** reposant sur une architecture modulaire et sécurisée, intégrant **HAProxy**, **Keepalived**, **Traefik v3**, et **Docker Swarm**.
@@ -37,4 +41,53 @@ L’infrastructure repose sur :
 - **Traefik v3** est déployé en mode *global* sur tous les managers.
 - Chaque instance communique avec un **socket Docker protégé** via un conteneur `socket-proxy`.
 - Le `socket-proxy` limite l’accès à l’API Docker en lecture seule (services, tasks, networks, swarm).
-- URL d’accès :  
+- URL d’accès :
+
+💡 Voici comment faire concrètement :
+
+Ouvre ton dépôt sur GitHub
+
+Clique sur README.md
+
+Clique sur ✏️ (Edit this file)
+
+Descends à l’endroit où tu veux insérer les étapes (par exemple, après une section “📋 Prérequis” ou “🚀 Déploiement du projet”)
+
+Colle ce bloc :
+
+## 🐳 Étape 1 — Initialisation du cluster Docker Swarm
+
+Sur le **manager principal** :
+
+```bash
+docker swarm init --advertise-addr 10.10.0.11
+
+
+Copiez le token d’adhésion affiché à la fin :
+
+docker swarm join --token SWMTKN-1-xxxxxxxx 10.10.0.11:2377
+
+
+Sur les autres managers et le worker, exécutez :
+
+docker swarm join --token SWMTKN-1-xxxxxxxx 10.10.0.11:2377
+
+
+Vérifiez que le cluster est bien formé :
+
+docker node ls
+
+🌐 Étape 2 — Création du réseau Overlay Traefik
+
+Sur un manager :
+
+docker network create --driver=overlay --attachable traefik
+
+
+Vérifiez que le réseau a bien été créé :
+
+docker network ls
+
+
+💡 Le réseau traefik sera utilisé par Traefik et les services web pour communiquer à travers le cluster.
+
