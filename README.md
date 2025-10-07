@@ -7,34 +7,35 @@
 
 
 
-# ⚙️ Architecture du Cluster Docker Swarm
+# ⚙️ Docker Swarm Cluster Architecture
 
-Ce projet met en place une **infrastructure haute disponibilité** reposant sur une architecture modulaire et sécurisée, intégrant **HAProxy**, **Keepalived**, **Traefik v3**, et **Docker Swarm**.
+This project sets up a **high-availability infrastructure** based on a modular and secure architecture, integrating **HAProxy**, **Keepalived**, **Traefik v3**, and **Docker Swarm**.
 
 ---
 
-## 🧩 Vue d’ensemble
+## 🧩 Overview
 
-L’infrastructure repose sur :
+The infrastructure is built on:
 
-- 🐳 **3 nœuds Docker Swarm en mode manager** : garantissent le quorum Raft et la haute disponibilité du cluster.
-- 🧠 **2 nœuds HAProxy avec Keepalived** : fournissent une IP virtuelle flottante (VIP) pour l’accès externe.
-- 🔒 **Terminaison SSL sur HAProxy** : certificats puis transmission du trafic en TCP vers les nœuds Traefik. 
-- 🌐 **Traefik v3** : déployé en mode global sur les managers pour le routage HTTP/S dynamique.
-- 🧰 **GitLab** : gestion de la configuration (copie de travail RW, CI/CD possible pour automatiser les mises à jour).
-- ⚙️ **Nœuds workers (lot 2)** : prévus pour héberger les services applicatifs (Nginx, Apache, etc.).
+- 🐳 **3 Docker Swarm manager nodes** – ensure Raft quorum and cluster high availability.  
+- 🧠 **2 HAProxy nodes with Keepalived** – provide a floating Virtual IP (VIP) for external access.  
+- 🔒 **SSL termination on HAProxy** – handles certificates and forwards decrypted TCP traffic to Traefik nodes.  
+- 🌐 **Traefik v3** – deployed in global mode on managers for dynamic HTTP/S routing.  
+- 🧰 **GitLab** – manages configuration (read/write working copy, CI/CD ready for automated updates).  
+- ⚙️ **Worker nodes (batch 2)** – dedicated to hosting application services (Nginx, Apache, etc.).
 
 ---
 
 ## 🖧 Keepalived + HAProxy
 
-- **Keepalived** fournit une **VIP** (Virtual IP) entre deux instances HAProxy.  
-- En cas de panne d’un nœud HAProxy, la VIP bascule automatiquement vers l’autre.  
-- Chaque HAProxy relaie les requêtes TCP entrantes (port `443`) vers les **managers Docker Swarm**.  
-- La **terminaison SSL** est effectuée sur HAProxy (certificats Let’s Encrypt).  
-- Le trafic HTTPS est déchiffré et relayé en **TCP** vers les backends Traefik.
+- **Keepalived** provides a **Virtual IP (VIP)** shared between two HAProxy instances.  
+- In case of an HAProxy node failure, the VIP automatically switches to the other instance.  
+- Each HAProxy forwards incoming TCP requests (port `443`) to the **Docker Swarm manager nodes**.  
+- **SSL termination** is handled by HAProxy (Let’s Encrypt certificates).  
+- HTTPS traffic is decrypted and then forwarded over **TCP** to the Traefik backends.
 
 ---
+
 
 # 🚢 Managers – Traefik v3 + Socket Proxy
 
