@@ -15,8 +15,9 @@ providers:
 
 api:
   dashboard: true
-  insecure: false   # ⚠️ toujours false en prod
+  insecure: true   # ⚠️ toujours false en prod
 
 
 log:
   level: DEBUG
+
