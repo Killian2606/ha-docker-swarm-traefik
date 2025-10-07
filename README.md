@@ -64,7 +64,7 @@ Follow the steps below to set up and connect all nodes in your Docker Swarm envi
 
 ---
 
-## 🐳 Step 1 — Initialize the Docker Swarm Cluster
+## 🐳 Initialize the Docker Swarm Cluster
 
 On the **main manager node**, run:
 
