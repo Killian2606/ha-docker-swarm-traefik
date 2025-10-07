@@ -54,8 +54,7 @@ Clique sur ✏️ (Edit this file)
 Descends à l’endroit où tu veux insérer les étapes (par exemple, après une section “📋 Prérequis” ou “🚀 Déploiement du projet”)
 
 Colle ce bloc :
-
-## 🐳 Étape 1 — Initialisation du cluster Docker Swarm
+  Étape 1 — Initialisation du cluster Docker Swarm
 
 Sur le **manager principal** :
 
